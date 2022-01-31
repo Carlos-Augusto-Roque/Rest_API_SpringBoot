@@ -1,0 +1,67 @@
+package com.example.demo.controllers;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.example.demo.model.Usuario;
+import com.example.demo.repository.UsuarioRepository;
+
+/**
+ *
+ * A sample greetings controller to return greeting text
+ */
+
+/*Annotation que define o controller*/
+@RestController
+public class GreetingsController {
+    
+	/*injecao de dependencia para repositorio*/
+	@Autowired
+	private UsuarioRepository usuarioRepository;	
+	
+	/*método generico para testar o controller da api*/
+    @RequestMapping(value = "/{name}", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public String greetingText(@PathVariable String name) {
+        return "Curso Spring Boot API: " + name + "!";
+    }    
+    
+    @PostMapping(value="salvar")
+    @ResponseBody
+    public ResponseEntity<Usuario> salvar (@RequestBody Usuario usuario){
+    	Usuario user = usuarioRepository.save(usuario);
+    	return new ResponseEntity<Usuario>(user, HttpStatus.CREATED);
+    }    
+    
+    @GetMapping(value = "listaTodos")
+    /*retorna os dados para o corpo da resposta*/
+    @ResponseBody
+    public ResponseEntity<List<Usuario>> listaUsuarios(){
+    	List<Usuario> usuarios = usuarioRepository.findAll();
+    	/*retorna a lista de usuarios em JSON*/
+    	return new ResponseEntity<List<Usuario>>(usuarios, HttpStatus.OK);
+    }
+    
+    @PutMapping(value="atualizar")
+    @ResponseBody
+    public ResponseEntity<Usuario> atualizar (@RequestBody Usuario usuario){
+    	Usuario user = usuarioRepository.save(usuario);
+    	return new ResponseEntity<Usuario>(user, HttpStatus.OK);
+    }   
+    
+    
+    
+}
